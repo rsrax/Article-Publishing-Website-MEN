@@ -1,0 +1,8 @@
+extends ../layout
+block content
+  body
+    .container
+      h1.mb-4 Edit Article
+      -article_id= article.id
+      form(action='/articles/'+article_id+'?_method=PUT' method='POST')
+        include _form_fields

@@ -1,14 +1,25 @@
 var express = require("express");
 var passport = require("passport");
 var Account = require("../models/account");
+var articleRouter = require("./articles");
+const Article = require("./../models/article");
 var router = express.Router();
 
-router.get("/", function (req, res) {
-  res.render("index", { user: req.user });
+router.use("/article", articleRouter);
+
+router.get("/", async (req, res) => {
+  const articles = await Article.find().sort({ createdAt: "desc" });
+  res.render("articles/index", {
+    articles: articles,
+    user: req.cookies.userData,
+  });
 });
 
 router.get("/register", function (req, res) {
-  res.render("register", {});
+  if (req.cookies.userData) {
+    res.redirect("/");
+  }
+  res.render("register");
 });
 
 router.post("/register", function (req, res) {
@@ -34,14 +45,26 @@ router.post("/register", function (req, res) {
   );
 });
 router.get("/login", function (req, res) {
+  if (req.cookies.userData) {
+    res.redirect("/");
+  }
   res.render("login", { user: req.user });
 });
 
 router.post("/login", passport.authenticate("local"), function (req, res) {
+  res.cookie("userData", req.user, { maxAge: 3600000 });
   res.redirect("/users/profile");
 });
 
+router.get("/getuser", (req, res) => {
+  //shows all the cookies
+  res.send(req.cookies);
+});
+
 router.get("/logout", function (req, res) {
+  res.cookie("userData", req.user, {
+    expires: new Date(1),
+  });
   req.logout();
   res.redirect("/");
 });
@@ -49,5 +72,10 @@ router.get("/logout", function (req, res) {
 router.get("/ping", function (req, res) {
   res.status(200).send("pong!");
 });
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.redirect("/login");
+}
 
 module.exports = router;

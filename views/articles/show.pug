@@ -1,0 +1,10 @@
+extends ../layout
+block content
+    .container(style="background-color:white;margin-top: 25px;")
+      h1.mb-1= article.title
+      .text-muted.mb-2= article.createdAt.toLocaleDateString()
+      a.btn.btn-secondary(href='/') All Articles
+      if(user._id==article.userid)
+        a.btn.btn-info(href='/articles/edit/'+article.id) Edit
+      div
+        #{article.sanitizedHtml}

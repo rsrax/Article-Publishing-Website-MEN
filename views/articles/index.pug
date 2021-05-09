@@ -1,0 +1,17 @@
+extends ../layout
+block content
+    .container(style='padding:5px,margin:5px,border:5px')
+      if(user)
+        a.btn.btn-success(href='/articles/new') New Article
+      each article in articles
+        .card.mt-4
+          .card-body
+            h4.card-title= article.title
+            .card-subtitle.text-muted.mb-2= article.createdAt.toLocaleDateString()
+            .card-text.mb-2= article.description
+            a.btn.btn-primary(href='articles/'+article.slug+'') Read More
+            if(user)
+              if(user._id==article.userid)
+                a.btn.btn-info(href='articles/edit/'+article.id+'') Edit
+                form.d-inline(action='/articles/'+article.id+'?_method=DELETE' method='POST')
+                  button.btn.btn-danger(type='submit') Delete

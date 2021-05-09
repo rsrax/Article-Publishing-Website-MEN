@@ -1,0 +1,14 @@
+.form-group
+  label(for='title') Title
+  -article_title= article.title
+  input#title.form-control(required='' value=article_title type='text' name='title')
+.form-group
+  label(for='description') Description
+  textarea#description.form-control(name='description')= article.description
+.form-group
+  label(for='markdown') Markdown
+  textarea#markdown.form-control(required='' name='markdown')= article.markdown
+.form-group
+  input(type="hidden" name="id" value=""+user._id+"")
+a.btn.btn-secondary(href='/') Cancel
+button.btn.btn-primary(type='submit') Save

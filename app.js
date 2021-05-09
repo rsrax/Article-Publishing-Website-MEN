@@ -7,6 +7,9 @@ var mongoose = require("mongoose");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var bodyParser = require("body-parser");
+const Article = require("./models/article");
+const articleRouter = require("./routes/articles");
+const methodOverride = require("method-override");
 
 var routes = require("./routes/index");
 var users = require("./routes/users");
@@ -22,8 +25,16 @@ app.use(
   express.static(path.join(__dirname, "public/javascripts"))
 );
 app.use(
+  "public/javascripts",
+  express.static(path.join(__dirname, "public/javascripts/navbar"))
+);
+app.use(
   "public/stylesheets",
   express.static(path.join(__dirname, "public/stylesheets"))
+);
+app.use(
+  "public/stylesheets",
+  express.static(path.join(__dirname, "public/stylesheets/"))
 );
 app.set("view engine", "pug");
 
@@ -34,13 +45,17 @@ app.use(cookieParser());
 app.use(
   require("express-session")({
     secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(methodOverride("_method"));
+
+app.use("/articles", articleRouter);
 
 app.use("/", routes);
 app.use("/users", users);
