@@ -46,7 +46,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(
-  require("express-session")({
+  require("cookie-session")({
     secret: "keyboard cat",
     resave: true,
     saveUninitialized: true,
