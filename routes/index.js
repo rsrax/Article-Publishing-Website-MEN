@@ -6,6 +6,11 @@ const Article = require("./../models/article");
 const account = require("../models/account");
 var router = express.Router();
 
+router.use(function (req, res, next) {
+  res.locals.user = req.user || "null";
+  next();
+});
+
 router.use("/article", articleRouter);
 
 router.get("/", async (req, res) => {
@@ -21,6 +26,10 @@ router.get("/register", function (req, res) {
     res.redirect("/");
   }
   res.render("register");
+});
+
+router.get("/check", function (req, res) {
+  res.render("check");
 });
 
 router.post("/register", function (req, res) {
@@ -40,7 +49,8 @@ router.post("/register", function (req, res) {
       }
 
       passport.authenticate("local")(req, res, function () {
-        res.redirect("/users/profile");
+        res.cookie("userData", req.user, { maxAge: 3600000 });
+        res.redirect(`/users/profile/${req.user._id}`);
       });
     }
   );

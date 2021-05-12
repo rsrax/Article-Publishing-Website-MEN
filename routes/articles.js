@@ -3,32 +3,33 @@ const Article = require("./../models/article");
 var Account = require("../models/account");
 const router = express.Router();
 
+router.use(function (req, res, next) {
+  res.locals.user = req.user || "null";
+  next();
+});
+
 router.get("/", async (req, res) => {
   const articles = await Article.find().sort({ createdAt: "desc" });
   res.render("articles/index", { articles: articles });
 });
 
 router.get("/new", isLoggedIn, (req, res) => {
-  var user = req.cookies.userData;
   res.render("articles/new", {
     article: new Article(),
-    user: user,
   });
 });
 
 router.get("/edit/:id", isLoggedIn, async (req, res) => {
   const article = await Article.findById(req.params.id);
-  var user = req.cookies.userData;
   res.render("articles/edit", {
     article: article,
-    user: user,
   });
 });
 
 router.get("/:slug", async (req, res) => {
   const article = await Article.findOne({ slug: req.params.slug });
   if (article == null) res.redirect("/");
-  res.render("articles/show", { article: article, user: req.cookies.userData });
+  res.render("articles/show", { article: article });
 });
 
 router.post(

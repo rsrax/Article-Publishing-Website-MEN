@@ -52,5 +52,5 @@ articleSchema.pre("validate", function (next) {
 
   next();
 });
-// hello
+
 module.exports = mongoose.model("Article", articleSchema);

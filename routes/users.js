@@ -2,6 +2,11 @@ var express = require("express");
 const account = require("../models/account");
 var router = express.Router();
 
+router.use(function (req, res, next) {
+  res.locals.user = req.user || "null";
+  next();
+});
+
 /* GET users listing. */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");

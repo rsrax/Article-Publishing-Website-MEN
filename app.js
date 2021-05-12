@@ -11,10 +11,10 @@ const Article = require("./models/article");
 const articleRouter = require("./routes/articles");
 const methodOverride = require("method-override");
 
+var app = express();
+
 var routes = require("./routes/index");
 var users = require("./routes/users");
-
-var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -50,18 +50,19 @@ app.use(
     secret: "keyboard cat",
     resave: true,
     saveUninitialized: true,
+    maxAge: 60 * 60 * 1000,
   })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(methodOverride("_method"));
 
-app.use("/articles", articleRouter);
-
 app.use("/", routes);
 app.use("/users", users);
+app.use("/articles", articleRouter);
 
 var Account = require("./models/account");
 passport.use(new LocalStrategy(Account.authenticate()));
