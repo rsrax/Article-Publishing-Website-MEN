@@ -17,9 +17,15 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  publishedBy: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  photoURL: {
+    type: String,
   },
   slug: {
     type: String,

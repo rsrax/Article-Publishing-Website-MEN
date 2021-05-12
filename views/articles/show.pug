@@ -1,10 +1,16 @@
 extends ../layout
 block content
-    .container(style="background-color:white;margin-top: 25px;")
-      h1.mb-1= article.title
-      .text-muted.mb-2= article.createdAt.toLocaleDateString()
-      a.btn.btn-secondary(href='/') All Articles
+  .container(style="background-color:white;margin-top: 25px;")
+    h1.mb-1= article.title
+    .text-muted.mb-2= article.createdAt.toLocaleDateString()
+    a.btn.btn-secondary(href='/') All Articles
+    if(user)
       if(user._id==article.userid)
         a.btn.btn-info(href='/articles/edit/'+article.id) Edit
-      div
-        #{article.sanitizedHtml}
+    if(user)
+      if(user._id==article.userid)
+        form.d-inline(action='/articles/'+article.id+'?_method=DELETE' method='POST')
+          button.btn.btn-danger(type='submit') Delete
+    div
+      - var articleMarkdown = article.sanitizedHtml;
+      p !{articleMarkdown}

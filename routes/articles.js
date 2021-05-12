@@ -1,5 +1,6 @@
 const express = require("express");
 const Article = require("./../models/article");
+var Account = require("../models/account");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -60,6 +61,10 @@ function saveArticleAndRedirect(path) {
     article.description = req.body.description;
     article.markdown = req.body.markdown;
     article.userid = req.body.id;
+    var author = await Account.findById(article.userid);
+    article.publishedBy = author.fullname;
+    article.photoURL =
+      "https://getuikit.com/v2/docs/images/placeholder_600x400.svg";
     try {
       article = await article.save();
       res.redirect(`/articles/${article.slug}`);
