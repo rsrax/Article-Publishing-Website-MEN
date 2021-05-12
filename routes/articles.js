@@ -1,6 +1,6 @@
 const express = require("express");
 const Article = require("./../models/article");
-var Account = require("../models/Account");
+var Account = require("../models/account");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
