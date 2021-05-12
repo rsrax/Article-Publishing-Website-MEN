@@ -19,6 +19,7 @@ var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("views/users", path.join(__dirname, "views/users"));
+app.set("views/articles", path.join(__dirname, "views/articles"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   "public/javascripts",
@@ -33,9 +34,11 @@ app.use(
   express.static(path.join(__dirname, "public/stylesheets"))
 );
 app.use(
-  "public/stylesheets",
-  express.static(path.join(__dirname, "public/stylesheets/"))
+  "public/font-awesome-4.3.0",
+  express.static(path.join(__dirname, "public/font-awesome-4.3.0"))
 );
+app.use("public/fonts", express.static(path.join(__dirname, "public/fonts")));
+app.use("public/images", express.static(path.join(__dirname, "public/images")));
 app.set("view engine", "pug");
 
 app.use(logger("dev"));
@@ -87,6 +90,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
+  if (err.status == 404) res.render("404");
   res.render("error");
 });
 

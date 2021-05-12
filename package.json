@@ -2,9 +2,10 @@
   "name": "routerauth",
   "version": "0.0.0",
   "private": true,
+  "main": "./bin/www",
   "scripts": {
-    "devStart": "nodemon ./bin/www",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
   },
   "dependencies": {
     "connect-mongo": "^4.4.1",

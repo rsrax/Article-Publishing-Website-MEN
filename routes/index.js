@@ -3,6 +3,7 @@ var passport = require("passport");
 var Account = require("../models/account");
 var articleRouter = require("./articles");
 const Article = require("./../models/article");
+const account = require("../models/account");
 var router = express.Router();
 
 router.use("/article", articleRouter);
@@ -51,9 +52,11 @@ router.get("/login", function (req, res) {
   res.render("login", { user: req.user });
 });
 
-router.post("/login", passport.authenticate("local"), function (req, res) {
+router.post("/login", passport.authenticate("local"), async (req, res) => {
+  const user = await account.findOne({ username: req.body.username });
+  if (user == null) res.redirect("/login");
   res.cookie("userData", req.user, { maxAge: 3600000 });
-  res.redirect("/users/profile");
+  res.redirect(`/users/profile/${user._id}`);
 });
 
 router.get("/getuser", (req, res) => {
