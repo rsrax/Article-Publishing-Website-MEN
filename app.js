@@ -24,6 +24,8 @@ app.set("views", path.join(__dirname, "views"));
 app.set("views/users", path.join(__dirname, "views/users"));
 app.set("views/articles", path.join(__dirname, "views/articles"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static("public"));
 app.use(
   "public/javascripts",
   express.static(path.join(__dirname, "public/javascripts"))

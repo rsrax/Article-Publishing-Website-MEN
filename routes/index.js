@@ -18,8 +18,7 @@ router.use("/article", articleRouter);
 
 router.get("/", async (req, res) => {
   const articles = await Article.find().sort({ createdAt: "desc" });
-  console.log(res.locals.user);
-  res.render("articles/index", {
+  res.render("index", {
     articles: articles,
   });
 });

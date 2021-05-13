@@ -1,3 +1,14 @@
 extends layout
 
 block content
+  .container(style='padding:25px;')
+    .row
+      each article in articles
+        .card(style='width: 18rem;margin:1%')
+          img.card-img-top(style="width:100%;height:15vw;object-fit:cover;" src=article.photoURL alt='...')
+          .card-body
+            h5.card-title(style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;")= article.title
+            .card-subtitle.text-muted.mb-2= article.createdAt.toLocaleDateString() + ", By " + article.publishedBy
+            p.card-text(style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;")= article.description
+          .card-footer
+            a.btn.btn-primary(href='articles/'+article.slug+'') Read More
