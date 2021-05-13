@@ -10,6 +10,8 @@ var bodyParser = require("body-parser");
 const Article = require("./models/article");
 const articleRouter = require("./routes/articles");
 const methodOverride = require("method-override");
+const favicon = require("serve-favicon");
+const flash = require("connect-flash");
 
 var app = express();
 
@@ -39,6 +41,10 @@ app.use(
 );
 app.use("public/fonts", express.static(path.join(__dirname, "public/fonts")));
 app.use("public/images", express.static(path.join(__dirname, "public/images")));
+app.use(favicon(path.join(__dirname, "public/images", "favicon.ico")));
+
+app.use(flash());
+
 app.set("view engine", "pug");
 
 app.use(logger("dev"));
@@ -60,14 +66,39 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(methodOverride("_method"));
 
-app.use("/", routes);
-app.use("/users", users);
-app.use("/articles", articleRouter);
-
 var Account = require("./models/account");
-passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+passport.use(
+  "local-login",
+  new LocalStrategy(
+    {
+      passReqToCallback: true,
+    },
+    function (req, username, password, done) {
+      Account.findOne({ username: username }, function (err, user) {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        if (!user) {
+          return done(null, false, req.flash("error", "User not found"));
+        }
+        if (!user.validPassword(password)) {
+          console.log("incorrect password");
+          return done(null, false, req.flash("error", "Password incorrect"));
+        }
+        return done(null, user);
+      });
+    }
+  )
+);
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+passport.deserializeUser(function (id, done) {
+  Account.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
 
 //mongoose setup
 mongoose.set("useNewUrlParser", true);
@@ -77,6 +108,19 @@ mongoose.set("useUnifiedTopology", true);
 mongoose.connect(
   "mongodb+srv://RS:U.eBE-aST8hC6C4@cluster0.wydjm.mongodb.net/News_App?retryWrites=true&w=majority"
 );
+
+app.use("/", routes);
+app.use("/users", users);
+app.use("/articles", articleRouter);
+
+app.get("/flash", (req, res) => {
+  req.flash("message", 'This is a message from the "/flash" endpoint');
+  res.redirect("/contact");
+});
+
+app.get("/contact", (req, res) => {
+  res.send(req.flash("message"));
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

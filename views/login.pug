@@ -1,26 +1,28 @@
 extends layout
 
 block content
-    .container-fluid
-      .row.no-gutter
-        // The image half
-        .col-md-6.d-none.d-md-flex.bg-image
-        // The content half
-        .col-md-6.bg-light
-          .login.d-flex.align-items-center.py-5
-            // Demo content
-            .container
-              .row
-                .col-lg-10.col-xl-7.mx-auto
-                  h3.display-4 Medium
-                  p.text-muted.mb-4 Enter your email address and password to login.
-                  form(role='form', action="/login",method="post", style='max-width: 300px;')
-                    .form-group
-                      input.form-control(type='text', name="username", placeholder='Enter Username')
-                    .form-group
-                      input.form-control(type='password', name="password", placeholder='Password')
-                    button.btn.btn-default(type='submit') Submit
-                    .text-center.d-flex.justify-content-between.mt-4
-                      p
-                        a.font-italic.text-muted(href='/register')
-                          u  Create an account
+  .container-fluid
+    .row.no-gutter
+      // The image half
+      .col-md-6.d-none.d-md-flex.bg-image
+      // The content half
+      .col-md-6.bg-light
+        .login.d-flex.align-items-center.py-5
+          // Demo content
+          .container
+            .row
+              .col-lg-10.col-xl-7.mx-auto
+                h3.display-4 Medium
+                each err in error
+                  .alert.alert-danger(role='alert')= error
+                p.text-muted.mb-4 Enter your username and password to login.
+                form(role='form', action="/login",method="post", style='max-width: 300px;')
+                  .form-group
+                    input.form-control(type='text', name="username", placeholder='Enter Username', style='margin:1%;')
+                  .form-group
+                    input.form-control(type='password', name="password", placeholder='Password', style='margin:1%;')
+                  button.btn.btn-primary(type='submit', style='margin:1%;') Submit
+                  .text-center.d-flex.justify-content-between.mt-4
+                    p
+                      a.font-italic.text-muted(href='/register')
+                        u  Create an account

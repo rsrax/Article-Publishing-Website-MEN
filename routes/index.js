@@ -7,7 +7,10 @@ const account = require("../models/account");
 var router = express.Router();
 
 router.use(function (req, res, next) {
-  res.locals.user = req.user || "null";
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
+  res.locals.user = req.user || null;
   next();
 });
 
@@ -15,14 +18,14 @@ router.use("/article", articleRouter);
 
 router.get("/", async (req, res) => {
   const articles = await Article.find().sort({ createdAt: "desc" });
+  console.log(res.locals.user);
   res.render("articles/index", {
     articles: articles,
-    user: req.cookies.userData,
   });
 });
 
 router.get("/register", function (req, res) {
-  if (req.cookies.userData) {
+  if (req.isAuthenticated()) {
     res.redirect("/");
   }
   res.render("register");
@@ -56,17 +59,31 @@ router.post("/register", function (req, res) {
   );
 });
 router.get("/login", function (req, res) {
-  if (req.cookies.userData) {
+  if (req.isAuthenticated()) {
     res.redirect("/");
   }
   res.render("login", { user: req.user });
 });
 
-router.post("/login", passport.authenticate("local"), async (req, res) => {
-  const user = await account.findOne({ username: req.body.username });
-  if (user == null) res.redirect("/login");
-  res.cookie("userData", req.user, { maxAge: 3600000 });
-  res.redirect(`/users/profile/${user._id}`);
+router.post("/login", function (req, res, next) {
+  passport.authenticate(
+    "local-login",
+    { failureFlash: true },
+    function (err, user, info) {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.redirect("/login");
+      }
+      req.logIn(user, function (err) {
+        if (err) {
+          return next(err);
+        }
+        return res.redirect(`/users/profile/${user._id}`);
+      });
+    }
+  )(req, res, next);
 });
 
 router.get("/getuser", (req, res) => {
@@ -79,6 +96,7 @@ router.get("/logout", function (req, res) {
     expires: new Date(1),
   });
   req.logout();
+  res.locals.user = null;
   res.redirect("/");
 });
 

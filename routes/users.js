@@ -3,7 +3,10 @@ const account = require("../models/account");
 var router = express.Router();
 
 router.use(function (req, res, next) {
-  res.locals.user = req.user || "null";
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
+  res.locals.user = req.user || null;
   next();
 });
 
@@ -20,7 +23,6 @@ router.get("/profile/:id", async (req, res, next) => {
 router.get("/newsfeed", function (req, res, next) {
   res.render("users/newsfeed", {
     articles: articles,
-    user: req.cookies.userData,
   });
 });
 

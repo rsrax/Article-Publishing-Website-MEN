@@ -24,27 +24,24 @@ html
           ul.navbar-nav.me-auto.mb-2.mb-lg-0
             li.nav-item
               a.nav-link.active(aria-current='page' href='/') Home
-            if(!user)
+            if(user == null)
               li.nav-item
                 a.nav-link(href='/login') Login
-            if(!user)
+            if(user == null)
               li.nav-item
                 a.nav-link(href='/register') Register
-            if(user)
-              li.nav-item
-                a.nav-link.bg-success(href='/articles/new') New Article
-            if(user)
+            if(user != null)
               li.nav-item
                 a.nav-link.disabled(href='#' tabindex='-1' aria-disabled='true') You are currently logged in as #{user.username}
-            if(!user)
+            if(user == null)
               li.nav-item
                 a.nav-link.disabled(tabindex='-1' aria-disabled='true') You are not logged in.
           // Left links
-          if(user)
+          if(user != null)
             ul.nav.navbar-nav.ms-auto.w-auto.justify-content-end
               li.nav-item.dropdown
                 a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
-                  img.rounded-circle(src='https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/fox.jpg' width='40' height='40')
+                  img.rounded-circle(src=`${user.profilePic}` width='40' height='40')
                 ul.dropdown-menu(aria-labelledby='navbarDropdown')
                   li
                     a.dropdown-item(href=`/users/profile/${user._id}`) View Profile
