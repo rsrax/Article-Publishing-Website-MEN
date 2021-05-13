@@ -12,6 +12,7 @@ const articleRouter = require("./routes/articles");
 const methodOverride = require("method-override");
 const favicon = require("serve-favicon");
 const flash = require("connect-flash");
+const account = require("./models/account");
 
 var app = express();
 
@@ -91,6 +92,62 @@ passport.use(
     }
   )
 );
+
+passport.use(
+  "local-signup",
+  new LocalStrategy(
+    {
+      passReqToCallback: true,
+    },
+    function (req, username, password, done) {
+      process.nextTick(function () {
+        Account.findOne({ username: username }, function (err, user) {
+          if (err) return done(err);
+
+          if (user) {
+            return done(
+              null,
+              false,
+              req.flash("error", "That username is already taken.")
+            );
+          } else if (password != req.body.C_password) {
+            return done(
+              null,
+              false,
+              req.flash("error", "The passwords do not match")
+            );
+          } else if (Account.findOne({ email: req.body.email })) {
+            return done(
+              null,
+              false,
+              req.flash("error", "The email is already registered")
+            );
+          } else {
+            console.log(username + " " + password);
+            var newUser = new account({
+              username: username,
+              password: password,
+              fullname: req.body.name,
+              email: req.body.email,
+              contact: req.body.ContactNo,
+              dob: req.body.DOB,
+              profilePic: "",
+              isEditor: 0,
+              isAdmin: 0,
+              isAuthor: 0,
+            });
+
+            newUser.save(function (err) {
+              if (err) throw err;
+              return done(null, newUser);
+            });
+          }
+        });
+      });
+    }
+  )
+);
+
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });

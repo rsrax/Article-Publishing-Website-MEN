@@ -35,29 +35,27 @@ router.get("/check", function (req, res) {
   res.render("check");
 });
 
-router.post("/register", function (req, res) {
-  Account.register(
-    new Account({
-      username: req.body.username,
-      fullname: req.body.name,
-      email: req.body.email,
-      contact: req.body.ContactNo,
-      dob: req.body.DOB,
-      profilePic: "",
-    }),
-    req.body.password,
-    function (err, account) {
+router.post("/register", function (req, res, next) {
+  passport.authenticate(
+    "local-signup",
+    {
+      failureFlash: true,
+    },
+    function (err, user, info) {
       if (err) {
-        return res.render("register", { account: account });
+        return next(err);
       }
-
-      passport.authenticate("local")(req, res, function () {
-        res.cookie("userData", req.user, { maxAge: 3600000 });
-        res.redirect(`/users/profile/${req.user._id}`);
-      });
+      if (!user) {
+        return res.redirect("/register");
+      } else {
+        passport.authenticate("local-login")(req, res, function () {
+          res.redirect(`/users/profile/${user._id}`);
+        });
+      }
     }
-  );
+  )(req, res, next);
 });
+
 router.get("/login", function (req, res) {
   if (req.isAuthenticated()) {
     res.redirect("/");

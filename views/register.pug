@@ -12,6 +12,8 @@ block content
             .row
               .col-lg-10.col-xl-7.mx-auto
                 h3.display-4 Medium
+                each err in error
+                  .alert.alert-danger(role='alert')= err
                 p.text-muted.mb-4 Registration Form
                 form(role='form', action="/register",method="post", style='max-width: 300px;')
                   .form-group
