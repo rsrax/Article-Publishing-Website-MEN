@@ -5,6 +5,7 @@ var articleRouter = require("./articles");
 const Article = require("./../models/article");
 const account = require("../models/account");
 var router = express.Router();
+var bcrypt = require("bcrypt");
 
 router.use(function (req, res, next) {
   res.locals.success_msg = req.flash("success_msg");
@@ -21,6 +22,11 @@ router.get("/", async (req, res) => {
   res.render("index", {
     articles: articles,
   });
+});
+
+router.get("/gethash/:str", function (req, res) {
+  var hash = bcrypt.hashSync(req.params.str, bcrypt.genSaltSync(12), null);
+  res.send(hash);
 });
 
 router.get("/register", function (req, res) {

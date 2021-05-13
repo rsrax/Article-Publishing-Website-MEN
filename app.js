@@ -13,6 +13,7 @@ const methodOverride = require("method-override");
 const favicon = require("serve-favicon");
 const flash = require("connect-flash");
 const account = require("./models/account");
+let bcrypt = require("bcrypt");
 
 var app = express();
 
@@ -79,14 +80,12 @@ passport.use(
     function (req, username, password, done) {
       Account.findOne({ username: username }, function (err, user) {
         if (err) {
-          console.log(err);
           return done(err);
         }
         if (!user) {
           return done(null, false, req.flash("error", "User not found"));
         }
         if (!user.validPassword(password)) {
-          console.log("incorrect password");
           return done(null, false, req.flash("error", "Password incorrect"));
         }
         return done(null, user);
@@ -118,13 +117,13 @@ passport.use(
               false,
               req.flash("error", "The passwords do not match")
             );
-          } else if (Account.findOne({ email: req.body.email })) {
+          } /* else if (Account.findOne({ email: req.body.email })) {
             return done(
               null,
               false,
               req.flash("error", "The email is already registered")
             );
-          } else {
+          }  */ else {
             console.log(username + " " + password);
             var newUser = new account({
               username: username,
