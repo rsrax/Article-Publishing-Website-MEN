@@ -1,24 +1,22 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var mongoose = require("mongoose");
-var passport = require("passport");
-var LocalStrategy = require("passport-local").Strategy;
-var bodyParser = require("body-parser");
-const Article = require("./models/article");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const mongoose = require("mongoose");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const bodyParser = require("body-parser");
 const articleRouter = require("./routes/articles");
 const methodOverride = require("method-override");
 const favicon = require("serve-favicon");
 const flash = require("connect-flash");
 const account = require("./models/account");
-let bcrypt = require("bcrypt");
 
-var app = express();
+const app = express();
 
-var routes = require("./routes/index");
-var users = require("./routes/users");
+const routes = require("./routes/index");
+const users = require("./routes/users");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -70,7 +68,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(methodOverride("_method"));
 
-var Account = require("./models/account");
+const Account = require("./models/account");
 passport.use(
   "local-login",
   new LocalStrategy(
@@ -111,7 +109,7 @@ passport.use(
               false,
               req.flash("error", "That username is already taken.")
             );
-          } else if (password != req.body.C_password) {
+          } else if (password !== req.body.C_password) {
             return done(
               null,
               false,
@@ -125,7 +123,7 @@ passport.use(
             );
           }  */ else {
             console.log(username + " " + password);
-            var newUser = new account({
+            const newUser = new account({
               username: username,
               password: password,
               fullname: req.body.name,
@@ -193,8 +191,9 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  if (err.status == 404) res.render("404");
+  if (err.status === 404) res.render("404");
   res.render("error");
+  next();
 });
 
 module.exports = app;
