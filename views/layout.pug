@@ -4,9 +4,9 @@ html
     block head
       title= Medium
       meta(name='viewport', content='width=device-width, initial-scale=1.0')
-      link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css' rel='stylesheet' integrity='sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0' crossorigin='anonymous')
+      link(href='/stylesheets/bootstrap.min.css' rel='stylesheet' )
       link(rel='stylesheet', href='/stylesheets/style.css')
-  body(style="padding:0;background:-webkit-linear-gradient(left, #3931af, #00c6ff);")
+  body(style="padding:0;background:-webkit-linear-gradient(left, #f1ca89, #9f5f80);")
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       // Container wrapper
       .container-fluid
@@ -33,30 +33,29 @@ html
             if(user == null)
               li.nav-item
                 a.nav-link.disabled(tabindex='-1' aria-disabled='true') You are not logged in.
-          // Left links
-          if(user != null)
-            ul.nav.navbar-nav.ms-auto.w-auto.justify-content-end
-              li.nav-item.dropdown
-                a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
-                  img.rounded-circle(src=`${user.profilePic}` width='40' height='40')
-                ul.dropdown-menu(aria-labelledby='navbarDropdown')
-                  li
-                    a.dropdown-item(href=`/users/profile/${user._id}`) View Profile
-                  li
-                    a.dropdown-item(href='/articles/new') Write An Article
-                  li
-                    hr.dropdown-divider
-                  li
-                    a.dropdown-item(href='/logout') Logout
+        // Left links
+        if(user != null)
+          ul.nav.navbar-nav.ms-auto.w-auto.justify-content-end
+            li.nav-item.dropdown
+              a#navbarDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+                img.rounded-circle(src=`${user.profilePic}` width='40' height='40')
+              ul.dropdown-menu(aria-labelledby='navbarDropdown')
+                li
+                  a.dropdown-item(href=`/users/profile/${user._id}`) View Profile
+                li
+                  a.dropdown-item(href='/articles/new') Write An Article
+                li
+                  hr.dropdown-divider
+                li
+                  a.dropdown-item(href='/logout') Logout
           // Search form
-          form.d-flex.input-group.w-auto
-            input.form-control(type='search' placeholder='Type query' aria-label='Search')
-            button.btn.btn-outline-primary(type='button' data-mdb-ripple-color='dark')
-              | Search
+        form.d-flex
+          input.form-control.me-2(type='search' placeholder='Search' aria-label='Search')
+          button.btn.btn-outline-light(type='submit') Search
         // Collapsible wrapper
         // Container wrapper
         // Navbar
-    div.container(style='width:90%')
+    div.container(style='width:95%;padding:0%')
       block content
 
   script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js')

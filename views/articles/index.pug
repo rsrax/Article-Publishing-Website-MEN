@@ -3,7 +3,7 @@ block content
   .container(style='padding:25px;')
     .row
       each article in articles
-        .card(style='width: 18rem;margin:1%')
+        .card(style='width:30%;margin:1%')
           img.card-img-top(style="width:100%;height:15vw;object-fit:cover;" src=article.photoURL alt='...')
           .card-body
             h5.card-title(style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;")= article.title

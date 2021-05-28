@@ -11,9 +11,7 @@ var Account = new Schema({
   contact: String,
   dob: Date,
   profilePic: String,
-  isEditor: Boolean,
-  isAdmin: Boolean,
-  isAuthor: Boolean,
+  userRole: Number,
   psalt: String,
 });
 

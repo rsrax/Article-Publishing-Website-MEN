@@ -1,5 +1,6 @@
 var express = require("express");
 const account = require("../models/account");
+const article = require("../models/article");
 var router = express.Router();
 
 router.use(function (req, res, next) {
@@ -17,7 +18,11 @@ router.get("/", function (req, res, next) {
 
 router.get("/profile/:id", async (req, res, next) => {
   const profile = await account.findById(req.params.id);
-  res.render("users/profile", { user: profile });
+  let user_articles;
+  if (profile.userRole > 0) {
+    user_articles = await article.find({ userid: profile._id });
+  }
+  res.render("users/profile", { profile: profile, articles: user_articles });
 });
 
 router.get("/newsfeed", function (req, res, next) {
